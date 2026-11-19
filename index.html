@@ -52,6 +52,15 @@ input[type=file]{display:none}
 .chip{border:1px solid var(--line);background:#f7f7f5;border-radius:999px;padding:6px 11px;font-size:14px;color:var(--ink);font-family:inherit}
 .chip.rec{border-color:color-mix(in srgb,var(--c) 45%,#fff);background:color-mix(in srgb,var(--c) 8%,#fff)}
 .chip .d{color:#c33;margin-left:4px;font-weight:700}
+.lockbar{display:flex;align-items:center;gap:10px;background:#fff7e6;border:1.5px solid #f2b04a;border-radius:12px;padding:10px 12px;margin-bottom:14px;font-size:14px;line-height:1.5;color:#6b4a00}
+.lockbar span{flex:1}
+.lockbar button{flex:0 0 auto;border:0;background:#f29600;color:#fff;font-weight:700;border-radius:10px;padding:9px 12px;font-size:14px;font-family:inherit}
+.lockbar.draft{background:#eef6ff;border-color:#9cc3ea;color:#1f4f7a}
+.prev{position:relative}
+.prev.locked::after{content:"🔒 已儲存";position:absolute;top:10px;right:10px;background:rgba(0,0,0,.65);color:#fff;font-size:13px;padding:4px 10px;border-radius:999px}
+.pin{border:1px solid var(--line)!important;border-radius:999px;padding:2px 9px!important;margin-right:4px}
+.pin.on{background:#f29600!important;color:#fff!important;border-color:#f29600!important}
+#out .it .bt .edit{background:#f29600}
 .iw{position:relative}
 .iw input,.iw textarea{padding-right:40px}
 .clr{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:0;border-radius:50%;background:rgba(0,0,0,.08);color:#666;font-size:13px;line-height:30px;padding:0}
@@ -72,6 +81,8 @@ input[type=file]{display:none}
 .gs{flex:1;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:1px 0}
 .gs::-webkit-scrollbar{display:none}
 .gs .chip{flex:0 0 auto;white-space:nowrap}
+.chip .sp{color:#f29600;margin-right:3px;font-size:12px}
+.chip.sel .sp{color:#fff}
 .addc{color:var(--mute);border-style:dashed!important}
 .addbox{display:flex;gap:4px;flex:0 0 auto}
 .addbox input{width:7em;font-size:14px;padding:5px 8px;border:1px solid var(--c);border-radius:999px;font-family:inherit}
@@ -109,7 +120,8 @@ details.card summary{font-weight:700;cursor:pointer}
 #tbar.show{display:flex}
 #tbar input{flex:1;font-size:17px;padding:9px 10px;border-radius:10px;border:0;font-family:inherit}
 .annoB{margin-top:8px;width:100%;padding:11px}
-.stripe,.step,.tip0{display:none}
+.stripe,.step{display:none}
+.tip0{display:block;font-size:12.5px;color:var(--mute);background:#fff;border:1px dashed var(--line);border-radius:10px;padding:7px 10px;margin-top:8px;line-height:1.5}
 .iosGuide{display:none;margin-top:10px;background:#fff;border:1.5px solid var(--c);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.6}
 body.ios .iosGuide{display:block}
 .iosGuide summary{font-weight:700;color:var(--c);cursor:pointer}
@@ -117,6 +129,7 @@ body.ios .iosGuide{display:block}
 .iosGuide small{color:var(--mute)}
 .upd{display:none;background:#1e7d3c;color:#fff;text-align:center;padding:11px 12px;font-size:15px;font-weight:700;cursor:pointer}
 .upd.show{display:block}
+.credit{text-align:center;font-size:11px;color:var(--mute);opacity:.75;margin:0 0 8px;letter-spacing:.5px}
 .ver{text-align:center;font-size:12px;color:var(--mute);margin:14px 0 4px}
 #out .hd .big{background:#1fa463!important;font-size:16px;padding:11px 14px}
 .look{display:none;gap:12px;margin-top:8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px}
@@ -206,7 +219,7 @@ window.addEventListener('unhandledrejection',function(e){var x=e.reason;__showEr
     <li>回到這裡按「<b>相簿多選</b>」匯入</li>
     <li>按「全部輸出」後，點綠色的「<b>存到照片</b>」→ 選「<b>儲存 N 張影像</b>」</li></ol>
     <small>直接按下載的圖會進「檔案」App，不會出現在照片裡。</small></details>
-  <div class="tip0">📷 需要<b>長焦、廣角</b>時：請用手機內建相機拍，拍完按「相簿多選」一次匯入（App 的「拍照」只能用主鏡頭）</div>
+  <div class="tip0">📷 如遇到 App「拍照」<b>無法切換廣角／長焦</b>：請改用手機內建相機拍，拍完按「相簿多選」一次匯入</div>
   <div class="strip" id="strip"></div>
   <div class="prev" id="prev"><div class="empty">按「拍照」會開啟手機原相機<br>或用「相簿多選」一次匯入現場拍好的照片</div></div>
   <div class="warn" id="warn"></div>
@@ -230,6 +243,7 @@ window.addEventListener('unhandledrejection',function(e){var x=e.reason;__showEr
     </div>
   </details>
   <div class="ver" id="ver"></div>
+  <div class="credit">annjohn 與他的ai小夥伴協力製作</div>
 </main>
 <div id="ed">
   <div class="top"><button id="edX">取消</button><b>標註缺失</b><button class="pri" id="edOK">完成</button></div>
@@ -253,7 +267,7 @@ window.addEventListener('unhandledrejection',function(e){var x=e.reason;__showEr
 
 <script>
 if(!CanvasRenderingContext2D.prototype.roundRect){CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){r=Math.min(r,w/2,h/2);this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this}}
-const APP_VER='1.8';
+const APP_VER='2.2';
 const IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const LOGO_A="data:image/jpeg;base64,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";
 const LOGO_B="data:image/jpeg;base64,";
@@ -261,7 +275,7 @@ const LOGO_C="data:image/jpeg;base64,";
 const FONT='"Noto Sans TC","Noto Sans CJK TC","PingFang TC","Microsoft JhengHei",sans-serif';
 
 const TPL={
-xf:{name:'馨芙家專業驗屋',short:'馨芙家',color:'#4a9e3c',ratio:[16,9],ratioTxt:'橫式 16:9',logo:LOGO_A,boxW:58,
+xf:{name:'馨芙家專業驗屋',short:'馨芙家',color:'#4a9e3c',ratio:[16,9],ratioTxt:'橫式 16:9',logo:LOGO_A,boxW:78,titleCenter:true,wm:{head:'rgba(172,194,178,0.93)',body:'255,255,255',headBase:14,fs:3.9,logoBare:true,divider:true,shadow:true},
     fields:[
       {k:'site',label:'建設公司/樓層編號',title:true,ph:'例：駿陞建設/大人物二期4C'},
       {k:'loc',label:'空間位置',ph:'例：客浴'},
@@ -391,9 +405,9 @@ function wrap(x,text,max,maxLines){
   return out;
 }
 function drawWM(x,W,H,p){
-  const t=T(),st=ST(),u=Math.min(W,H)/100*(st.scale/100);
-  const fs=3.2*u,pd=1.3*u,lh=fs*1.38,m=1.3*u,bw=Math.min(t.boxW*u,W-2*m);
-  const ls=(6.2*u-1.4*u)*((st.logo||100)/100),headH=Math.max(6.2*u,ls+1.4*u);
+  const t=T(),st=ST(),u=Math.min(W,H)/100*(st.scale/100),wm=t.wm||{};
+  const fs=(wm.fs||3.2)*u,pd=1.3*u,lh=fs*1.38,m=1.3*u,bw=Math.min(t.boxW*u,W-2*m),hb=(wm.headBase||6.2)*u;
+  const ls=(hb-1.4*u)*((st.logo||100)/100),headH=Math.max(hb,ls+1.4*u);
   const rows=[];
   for(const f of t.fields){if(f.title)continue;const v=(p.f[f.k]||'').trim();if(v)rows.push([lab(f),v,f.multi?3:2])}
   if(!t.noTime)rows.push([st.timeLabel,fmtT(p.time),1]);
@@ -403,20 +417,22 @@ function drawWM(x,W,H,p){
   const n=lines.reduce((s,l)=>s+l.length,0),bodyH=pd*1.4+n*lh,boxH=headH+bodyH;
   const X=m,Y=H-m-boxH,R=1.1*u;
   x.save();x.beginPath();x.roundRect(X,Y,bw,boxH,R);x.clip();
-  x.fillStyle=t.color;x.fillRect(X,Y,bw,headH);
-  x.fillStyle=`rgba(236,236,234,${st.opacity})`;x.fillRect(X,Y+headH,bw,bodyH);
+  x.fillStyle=wm.head||t.color;x.fillRect(X,Y,bw,headH);
+  x.fillStyle=`rgba(${wm.body||'236,236,234'},${st.opacity})`;x.fillRect(X,Y+headH,bw,bodyH);
   x.restore();
   // logo
   const lx=X+0.7*u,ly=Y+(headH-ls)/2,lg=logos[S.tpl];
-  x.save();x.beginPath();x.roundRect(lx,ly,ls,ls,0.6*u);x.fillStyle='#fff';x.fill();x.clip();
+  x.save();x.beginPath();x.roundRect(lx,ly,ls,ls,0.6*u);if(!wm.logoBare){x.fillStyle='#fff';x.fill()}x.clip();
   if(lg.complete)x.drawImage(lg,lx,ly,ls,ls);x.restore();
+  if(wm.divider){const dx=lx+ls+0.7*u;x.save();x.strokeStyle='rgba(255,255,255,.85)';x.lineWidth=Math.max(1,0.22*u);x.beginPath();x.moveTo(dx,Y+0.9*u);x.lineTo(dx,Y+headH-0.9*u);x.stroke();x.restore()}
   // title
   const title=t.titlePrefix+((t.fields.find(f=>f.title)&&p.f[t.fields.find(f=>f.title).k])||'');
   let tfs=fs*1.08;x.font=`700 ${tfs}px ${FONT}`;const tx=lx+ls+1.2*u,tmax=X+bw-tx-pd;
   while(x.measureText(title).width>tmax&&tfs>fs*0.6){tfs*=0.94;x.font=`700 ${tfs}px ${FONT}`}
-  x.fillStyle='#fff';
+  x.fillStyle='#fff';x.save();if(wm.shadow){x.shadowColor='rgba(40,60,45,.35)';x.shadowBlur=0.6*u;x.shadowOffsetY=0.12*u}
   if(t.titleCenter){x.textAlign='center';x.fillText(title,(tx+X+bw-pd)/2,Y+headH/2+u*0.15);x.textAlign='left'}
   else x.fillText(title,tx,Y+headH/2+u*0.15);
+  x.restore();
   // rows
   x.font=`${fs}px ${FONT}`;x.fillStyle='#1d1d1d';let yy=Y+headH+pd*0.7+lh/2;
   rows.forEach((r,i)=>{x.fillText(r[0]+'：',X+pd,yy);lines[i].forEach(l=>{x.fillText(l,X+pd+lw,yy);yy+=lh})});
@@ -450,8 +466,10 @@ async function restore(){
 }
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 async function addFiles(list,opt={}){
-  const base=Object.assign({},photos[cur]?photos[cur].f:S.last[S.tpl]);base.defect='';
-  const bcomp=clone(photos[cur]?(photos[cur].comp||{}):S.lastc[S.tpl])||{};delete bcomp.defect;
+  const P=editP(),useDraft=!P;
+  const base=Object.assign({},useDraft?S.last[S.tpl]:P.f);
+  const bcomp=clone(useDraft?S.lastc[S.tpl]:(P.comp||{}))||{};
+  if(!useDraft&&!pinned()){base.defect='';delete bcomp.defect}
   for(const file of list){
     const time=(await exifDate(file))||new Date(file.lastModified||Date.now());
     const p={id:++uid,file,time,f:Object.assign({},base),off:50,done:false,thumb:'',fromCam:!!opt.fromCam,comp:clone(bcomp)};
@@ -492,7 +510,7 @@ function drawTpls(){
 function drawStrip(){
   const s=$('strip');s.innerHTML='';
   photos.forEach((p,i)=>{const d=document.createElement('div');d.className='th'+(i===cur?' on':'');
-    d.innerHTML=(p.thumb?`<img src="${p.thumb}">`:(p.bad?'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px">⚠</span>':''))+`<span class="x">✕</span>`+(p.done?'<span class="ok">✓</span>':'')+((p.anno&&p.anno.length)?'<span class="ok" style="left:auto;right:2px;bottom:2px;background:#e33">✏</span>':'');
+    d.innerHTML=(p.thumb?`<img src="${p.thumb}">`:(p.bad?'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px">⚠</span>':''))+`<span class="x">✕</span>`+(p.done?'<span class="ok">🔒</span>':'')+((p.anno&&p.anno.length)?'<span class="ok" style="left:auto;right:2px;bottom:2px;background:#e33">✏</span>':'');
     d.onclick=e=>{if(e.target.classList.contains('x')){photos.splice(i,1);DB.del(p.id);if(bmpCache.id===p.id)bmpCache={id:null,bmp:null};cur=Math.min(cur,photos.length-1);saveCur();drawAll();return}cur=i;saveCur();drawAll()};
     s.appendChild(d)});
   const has=photos.length>0;$('saveOne').disabled=!has;$('saveAll').disabled=!has;
@@ -510,8 +528,11 @@ function compTokens(k,c){const cfg=FCFG(k),t=[];if(!cfg||!c)return t;if(c.raw)t.
   else if(cfg.mode==='multi')(c.list||[]).forEach((v,i)=>t.push({lab:v,rm:()=>c.list.splice(i,1)}));
   else (c.items||[]).forEach((x,i)=>t.push({lab:[x.p,x.s].filter(Boolean).join('｜'),rm:()=>c.items.splice(i,1)}));
   return t;}
-function getComp(k){const p=photos[cur];return clone(p?(p.comp||{})[k]:S.lastc[S.tpl][k])}
-function curText(k){const p=photos[cur];return p?(p.f[k]||''):(S.last[S.tpl][k]||'')}
+const editP=()=>{const p=photos[cur];return p&&!p.done?p:null};
+const pinned=()=>!!(S.pin&&S.pin[S.tpl]);
+function getComp(k){const p=editP();return clone(p?(p.comp||{})[k]:S.lastc[S.tpl][k])}
+function curText(k){const p=editP();return p?(p.f[k]||''):(S.last[S.tpl][k]||'')}
+function unlock(p){if(!p)return;p.done=false;p.cache=null;persist(p,true);drawAll()}
 function applyChip(k,gk,v){const cfg=FCFG(k);let c=getComp(k);if(!c){c={};const t=curText(k).trim();if(t)c.raw=t}
   if(cfg.mode==='seq'){c.sel=c.sel||{};if(c.sel[gk]===v)delete c.sel[gk];else c.sel[gk]=v}
   else if(cfg.mode==='multi'){c.list=c.list||[];const i=c.list.indexOf(v);if(i>=0)c.list.splice(i,1);else c.list.push(v)}
@@ -522,16 +543,27 @@ function applyChip(k,gk,v){const cfg=FCFG(k);let c=getComp(k);if(!c){c={};const 
 function chipOn(k,gk,v){const c=getComp(k),cfg=FCFG(k);if(!c)return false;
   if(cfg.mode==='seq')return (c.sel||{})[gk]===v;if(cfg.mode==='multi')return (c.list||[]).includes(v);
   const L=(c.items||[])[c.items.length-1];return !!L&&(gk==='pos'?L.p===v:L.s===v);}
+S.use=S.use||{};S.star=S.star||{};
+const U=(fk,gk)=>{const a=S.use[S.tpl]=S.use[S.tpl]||{},b=a[fk]=a[fk]||{};return b[gk]=b[gk]||{}};
+const STR=(fk,gk)=>{const a=S.star[S.tpl]=S.star[S.tpl]||{},b=a[fk]=a[fk]||{};return b[gk]=b[gk]||[]};
+let ORD={};
+function ordered(fk,gk,arr){const key=S.tpl+'|'+fk+'|'+gk;let o=ORD[key];
+  if(!o){const st=STR(fk,gk),u=U(fk,gk);o=arr.slice().sort((a,b)=>{const sa=st.indexOf(a),sb=st.indexOf(b);if(sa>=0||sb>=0){if(sa<0)return 1;if(sb<0)return -1;return sa-sb}return (u[b]||0)-(u[a]||0)||arr.indexOf(a)-arr.indexOf(b)});ORD[key]=o}
+  return o.filter(v=>arr.includes(v)).concat(arr.filter(v=>!o.includes(v)));}
+function bump(fk,gk,v){const u=U(fk,gk);u[v]=(u[v]||0)+1;save()}
+function toggleStar(fk,gk,v){const st=STR(fk,gk),i=st.indexOf(v);if(i>=0)st.splice(i,1);else st.push(v);ORD={};save()}
 function histOf(k){return S.hist[S.tpl][k]=S.hist[S.tpl][k]||[]}
 let acHide;
 function drawForm(){
   const F=$('form');const sl={};F.querySelectorAll('.gs').forEach(e=>sl[e.dataset.id]=e.scrollLeft);
   F.innerHTML='';const p=photos[cur];
+  if(p&&p.done){const lb=document.createElement('div');lb.className='lockbar';lb.innerHTML='<span>🔒 目前這張已儲存並鎖住。<br>下面填的是「<b>下一張</b>」的內容。</span><button>修改這張</button>';lb.querySelector('button').onclick=()=>unlock(p);F.appendChild(lb)}
+  else if(!p){const lb=document.createElement('div');lb.className='lockbar draft';lb.innerHTML='<span>📝 先填好這裡，拍進來的照片會直接套用</span>';F.appendChild(lb)}
   for(const f of T().fields){
     const cfg=FCFG(f.k);
     const w=document.createElement('div');w.className='f';
     const val=curText(f.k);
-    w.innerHTML=`<div class="lab"><span>${f.title?'標題　'+T().titlePrefix:''}${lab(f)}</span><span>${cfg?'':'<button data-a="add">＋存成選項</button>'}<button data-a="mg">${manage[f.k]?'完成':'管理'}</button></span></div>`;
+    w.innerHTML=`<div class="lab"><span>${f.title?'標題　'+T().titlePrefix:''}${lab(f)}</span><span>${f.k==='defect'?`<button data-a="pin" class="pin${pinned()?' on':''}">📌 ${pinned()?'已固定':'固定'}</button>`:''}${cfg?'':'<button data-a="add">＋存成選項</button>'}<button data-a="mg">${manage[f.k]?'完成':'管理'}</button></span></div>`;
     const iw=document.createElement('div');iw.className='iw';
     const inp=document.createElement(f.multi?'textarea':'input');if(f.multi)inp.rows=2;inp.placeholder=f.ph||'';inp.value=val;inp.autocomplete='off';
     const clr=document.createElement('button');clr.className='clr';clr.textContent='✕';clr.title='清除';clr.style.display=val?'':'none';
@@ -560,8 +592,10 @@ function drawForm(){
       cfg.groups.forEach(g=>{const row=document.createElement('div');row.className='grp';
         row.innerHTML=`<span class="gl">${esc(g.label)}</span>`;const gs=document.createElement('div');gs.className='gs';gs.dataset.id=f.k+'.'+g.k;
         const arr=S.g[S.tpl][f.k][g.k]=S.g[S.tpl][f.k][g.k]||[];
-        arr.forEach(v=>{const b=document.createElement('button');b.className='chip'+(chipOn(f.k,g.k,v)?' sel':'');b.innerHTML=esc(v)+(manage[f.k]?'<span class="d">×</span>':'');
-          b.onclick=()=>{if(manage[f.k]){arr.splice(arr.indexOf(v),1);save();drawForm();return}applyChip(f.k,g.k,v)};gs.appendChild(b)});
+        const stars=STR(f.k,g.k);
+        ordered(f.k,g.k,arr).forEach(v=>{const b=document.createElement('button');const on=stars.includes(v);b.className='chip'+(chipOn(f.k,g.k,v)?' sel':'')+(on?' star':'');
+          b.innerHTML=(manage[f.k]?`<span class="sp">${on?'★':'☆'}</span>`:(on?'<span class="sp">★</span>':''))+esc(v)+(manage[f.k]?'<span class="d">×</span>':'');
+          b.onclick=e=>{if(manage[f.k]){if(e.target.classList.contains('d')){arr.splice(arr.indexOf(v),1);ORD={};save()}else toggleStar(f.k,g.k,v);drawForm();return}bump(f.k,g.k,v);applyChip(f.k,g.k,v)};gs.appendChild(b)});
         const add=document.createElement('button');add.className='chip addc';add.textContent='＋';
         add.onclick=()=>{const box=document.createElement('span');box.className='addbox';box.innerHTML='<input placeholder="新增選項"><button>✓</button>';add.replaceWith(box);const ip=box.querySelector('input');ip.focus();
           const ok=()=>{const v=ip.value.trim();if(v&&!arr.includes(v)){arr.push(v);save();toast('已加入「'+g.label+'」')}drawForm()};box.querySelector('button').onclick=ok;ip.onkeydown=e=>{if(e.key==='Enter')ok()};ip.onblur=()=>setTimeout(()=>{if(document.body.contains(box)&&!ip.value.trim())drawForm()},200)};
@@ -569,13 +603,16 @@ function drawForm(){
     }else{
       const cs=document.createElement('div');cs.className='chips';
       const pre=S.chips[S.tpl][f.k]||[];
-      pre.forEach(v=>{const c=document.createElement('button');c.className='chip'+(v===inp.value?' sel':'');c.dataset.v=v;c.innerHTML=esc(v)+(manage[f.k]?'<span class="d">×</span>':'');
-        c.onclick=()=>{if(manage[f.k]){S.chips[S.tpl][f.k]=pre.filter(x=>x!==v);save();drawForm();return}inp.value=v;setVal(f.k,v,null);markSel();clr.style.display=''};cs.appendChild(c)});
+      const stars=STR(f.k,'_');
+      ordered(f.k,'_',pre).forEach(v=>{const c=document.createElement('button');const on=stars.includes(v);c.className='chip'+(v===inp.value?' sel':'')+(on?' star':'');c.dataset.v=v;
+        c.innerHTML=(manage[f.k]?`<span class="sp">${on?'★':'☆'}</span>`:(on?'<span class="sp">★</span>':''))+esc(v)+(manage[f.k]?'<span class="d">×</span>':'');
+        c.onclick=e=>{if(manage[f.k]){if(e.target.classList.contains('d')){S.chips[S.tpl][f.k]=pre.filter(x=>x!==v);ORD={};save()}else toggleStar(f.k,'_',v);drawForm();return}bump(f.k,'_',v);inp.value=v;setVal(f.k,v,null);markSel();clr.style.display=''};cs.appendChild(c)});
       markSel=()=>cs.querySelectorAll('.chip').forEach(c=>c.classList.toggle('sel',c.dataset.v===inp.value));
       if(pre.length)w.appendChild(cs);
       w.querySelector('[data-a=add]').onclick=()=>{const v=inp.value.trim();if(!v)return toast('先輸入內容');const a=S.chips[S.tpl][f.k]=S.chips[S.tpl][f.k]||[];if(!a.includes(v))a.unshift(v);save();drawForm();toast('已加入快速選項')};
     }
-    w.querySelector('[data-a=mg]').onclick=()=>{manage[f.k]=!manage[f.k];drawForm()};
+    w.querySelector('[data-a=mg]').onclick=()=>{manage[f.k]=!manage[f.k];ORD={};drawForm();if(manage[f.k])toast('點選項＝★置頂（再點取消），點 ×＝刪除')};
+    const pb=w.querySelector('[data-a=pin]');if(pb)pb.onclick=()=>{S.pin=S.pin||{};S.pin[S.tpl]=!pinned();save();drawForm();toast(pinned()?'缺失已固定：之後每張都會帶入':'已取消固定：每張重新填')};
     F.appendChild(w);
   }
   F.querySelectorAll('.gs').forEach(e=>{if(sl[e.dataset.id])e.scrollLeft=sl[e.dataset.id]});
@@ -586,18 +623,20 @@ function drawForm(){
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function setVal(k,v,comp){
   comp=comp||null;
-  if(photos[cur]){const P=photos[cur],old=P.f[k]||'';P.f[k]=v;P.comp=P.comp||{};P.comp[k]=clone(comp);persist(P);
-    if(k!=='defect')for(let j=cur+1;j<photos.length;j++){const q=photos[j];if(!q.f[k]||q.f[k]===old){q.f[k]=v;q.comp=q.comp||{};q.comp[k]=clone(comp);persist(q)}}}
-  S.last[S.tpl][k]=v;S.lastc[S.tpl][k]=clone(comp);save();schedule();
+  const P=editP();
+  if(P){const old=P.f[k]||'';P.f[k]=v;P.comp=P.comp||{};P.comp[k]=clone(comp);persist(P);
+    if(k!=='defect')for(let j=cur+1;j<photos.length;j++){const q=photos[j];if(q.done)continue;if(!q.f[k]||q.f[k]===old){q.f[k]=v;q.comp=q.comp||{};q.comp[k]=clone(comp);persist(q)}}}
+  S.last[S.tpl][k]=v;S.lastc[S.tpl][k]=clone(comp);save();if(P)schedule();
 }
 let tmr;function schedule(){clearTimeout(tmr);tmr=setTimeout(drawPrev,120)}
 async function drawPrev(){
   const box=$('prev'),p=photos[cur];
   $('look').classList.toggle('show',!!p);
+  $('prev').classList.remove('locked');
   if(!p){$('annoB').style.display='none';box.innerHTML='<div class="empty">按「拍照」會開啟手機原相機<br>或用「相簿多選」一次匯入現場拍好的照片</div>';$('warn').style.display='none';$('offw').style.display='none';return}
   let c;try{c=await render(p,1100)}catch(e){box.innerHTML=`<div class="empty">⚠ ${esc(e.message||e)}<br>可以按縮圖上的 ✕ 移除，改用「相簿多選」重新匯入</div>`;$('annoB').style.display='none';return}
-  box.innerHTML='';box.appendChild(c);
-  const ab=$('annoB');ab.style.display='block';ab.textContent=(p.anno&&p.anno.length)?`✏ 標註缺失（已加 ${p.anno.length} 個，點此修改）`:'✏ 標註缺失（框選・箭頭・文字）';
+  box.innerHTML='';box.appendChild(c);box.classList.toggle('locked',!!p.done);prerender();
+  const ab=$('annoB');ab.style.display=p.done?'none':'block';ab.textContent=(p.anno&&p.anno.length)?`✏ 標註缺失（已加 ${p.anno.length} 個，點此修改）`:'✏ 標註缺失（框選・箭頭・文字）';
   const b=bmpCache.bmp,R=ST().ratio||T().ratio,photoLand=b.width>=b.height,tplLand=R[0]>=R[1];
   const w=$('warn');if(photoLand!==tplLand){w.style.display='block';w.textContent=`⚠ 這張是${photoLand?'橫':'直'}拍，${T().short}範本要${tplLand?'橫':'直'}式，已自動裁切，可用下方滑桿調整位置`}else w.style.display='none';
   const a=outSize(100);const need=Math.abs(b.width/b.height-a[0]/a[1])>0.02;$('offw').style.display=need?'flex':'none';$('off').value=p.off;
@@ -639,13 +678,18 @@ function remember(p){
   for(const f of T().fields){const v=(p.f[f.k]||'').trim();if(!v)continue;const a=histOf(f.k),i=a.indexOf(v);if(i>=0)a.splice(i,1);a.unshift(v);if(a.length>100)a.length=100}
   save();
 }
+function outKey(p){const st=ST();return JSON.stringify([S.tpl,p.f,p.anno||[],p.off,+p.time,st.scale,st.logo,st.opacity,st.longEdge,st.quality,st.ratio||null,st.labels,st.timeLabel])}
+async function renderBlob(p){const c=await render(p,ST().longEdge);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',ST().quality));c.width=c.height=0;return b}
+let preT;
+function prerender(){clearTimeout(preT);preT=setTimeout(async()=>{const p=photos[cur];if(!p||BUSY)return;const k=outKey(p);if(p.cache&&p.cache.key===k)return;
+  try{const b=await renderBlob(p);if(!BUSY&&outKey(p)===k)p.cache={key:k,blob:b}}catch(e){}},1500)}
 async function makeFile(p){
-  const c=await render(p,ST().longEdge);
-  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',ST().quality));
+  const k=outKey(p);
+  const blob=(p.cache&&p.cache.key===k)?p.cache.blob:await renderBlob(p);p.cache={key:k,blob};
   S.seq[S.tpl]++;const t=T(),tf=t.fields.find(f=>f.title);
   const d=p.time,ds=`${d.getFullYear()}${pad2(d.getMonth()+1)}${pad2(d.getDate())}`;
   const name=[t.short,clean(p.f[tf.k]),clean(p.f.loc),clean(p.f.defect),ds,String(S.seq[S.tpl]).padStart(3,'0')].filter(Boolean).join('_')+'.jpg';
-  remember(p);return {name,blob};
+  remember(p);return {name,blob,pid:p.id};
 }
 async function deliver(files){
   const dl=await Promise.race([dlP,new Promise(r=>setTimeout(()=>r(null),1500))]);
@@ -663,7 +707,7 @@ async function deliver(files){
 const toDataURL=b=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(b)});
 let OUT=[];
 async function showOut(files){
-  OUT=files;const L=$('outL');L.innerHTML='';$('outT').textContent=`輸出完成（${files.length} 張）`;
+  OUT=files;OUTURL.forEach(u=>URL.revokeObjectURL(u));OUTURL=[];const L=$('outL');L.innerHTML='';$('outT').textContent=`輸出完成（${files.length} 張）`;
   const canShare=f=>{try{return !!(navigator.canShare&&navigator.canShare({files:f}))}catch(e){return false}};
   const fileOf=f=>new File([f.blob],f.name,{type:f.blob.type||'image/jpeg'});
   const all=canShare(files.map(fileOf));
@@ -673,24 +717,36 @@ async function showOut(files){
   $('outTip').innerHTML=IOS?(all?'按上方綠色「<b>存到照片</b>」→ 在選單選「<b>儲存 '+files.length+' 張影像</b>」，就會存進照片 App。':'請<b>長按每張圖片 →「加入照片」</b>存進照片 App。')
     :'如果沒有自動下載：<b>長按圖片 →「下載圖片」/「儲存影像」</b>，或按「分享」存到相簿、傳 LINE。';
   for(const f of files){
-    const d=document.createElement('div');d.className='it';const img=new Image();img.src=await toDataURL(f.blob);img.alt=f.name;
+    const d=document.createElement('div');d.className='it';const img=new Image();const u=URL.createObjectURL(f.blob);OUTURL.push(u);img.src=u;img.alt=f.name;img.loading='lazy';
+    if(f.pid){img.style.cursor='pointer';img.onclick=()=>editFromOut(f.pid)}
     const nm=document.createElement('div');nm.className='nm';nm.textContent=(f.orig?'【原圖】':'')+f.name;
     const bt=document.createElement('div');bt.className='bt';
     const b1=document.createElement('button');b1.textContent=IOS?'存到「檔案」':'⬇ 下載';b1.onclick=()=>{const a=document.createElement('a');a.href=img.src;a.download=f.name;document.body.appendChild(a);a.click();a.remove()};
     bt.appendChild(b1);
+    if(f.pid){const be=document.createElement('button');be.className='edit';be.textContent='✏ 修改';be.onclick=()=>editFromOut(f.pid);bt.appendChild(be)}
     if(canShare([fileOf(f)])){const b2=document.createElement('button');b2.textContent='📤 分享';b2.onclick=()=>navigator.share({files:[fileOf(f)]}).catch(()=>{});bt.appendChild(b2)}
     d.append(img,nm,bt);L.appendChild(d);
   }
   $('out').classList.add('show');
 }
-$('outX').onclick=()=>{$('out').classList.remove('show');$('outL').innerHTML='';OUT=[]};
+let OUTURL=[];
+function closeOut(){$('out').classList.remove('show');$('outL').innerHTML='';OUT=[];OUTURL.forEach(u=>URL.revokeObjectURL(u));OUTURL=[]}
+$('outX').onclick=()=>{closeOut();toTop()};
+function editFromOut(pid){const i=photos.findIndex(p=>p.id===pid);closeOut();if(i<0)return toast('這張已從清單移除');cur=i;saveCur();unlock(photos[i]);
+  setTimeout(()=>{try{$('prev').scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}},50);toast('已解鎖，改完再按「儲存這張」')}
 $('outShare').onclick=()=>{const fl=OUT.map(f=>new File([f.blob],f.name,{type:f.blob.type||'image/jpeg'}));navigator.share({files:fl}).then(()=>toast('完成')).catch(e=>{if(e&&e.name!=='AbortError')toast('分享失敗，請改用長按圖片儲存')})};
 function loadZip(){return window.JSZip?Promise.resolve():new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
-async function run(list){
+function toTop(){try{document.querySelector('.add').scrollIntoView({behavior:'smooth',block:'center'})}catch(e){window.scrollTo(0,0)}}
+let BUSY=false;
+async function run(list){BUSY=true;try{await run2(list)}finally{BUSY=false}}
+async function run2(list){
   mask(true,'產生中…');
   try{const out=[];for(let i=0;i<list.length;i++){mask(true,`產生中 ${i+1}/${list.length}`);out.push(await makeFile(list[i]))}
     if(IOS&&ST().keepOrig)list.forEach(p=>{if(p.fromCam){const d=p.time;out.push({name:`原圖_${T().short}_${d.getFullYear()}${pad2(d.getMonth()+1)}${pad2(d.getDate())}_${pad2(d.getHours())}${pad2(d.getMinutes())}${pad2(d.getSeconds())}.jpg`,blob:p.file,orig:true})}});
-    mask(false);const msg=await deliver(out);list.forEach(p=>{p.done=true;persist(p,true)});if(msg)toast(msg)}
+    mask(false);
+    const P=photos[cur];if(P&&list.includes(P)){S.last[S.tpl]=Object.assign({},P.f);S.lastc[S.tpl]=clone(P.comp||{})||{};if(!pinned()){S.last[S.tpl].defect='';delete S.lastc[S.tpl].defect}save()}
+    list.forEach(p=>{p.done=true;persist(p,true)});ORD={};drawAll();toTop();
+    const msg=await deliver(out);if(msg)toast(msg)}
   catch(e){mask(false);toast(e&&e.code==='declined'?'已取消':'儲存失敗：'+(e&&(e.message||e.code)||e))}
   drawStrip();drawForm();
 }
